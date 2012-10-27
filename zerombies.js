@@ -1,8 +1,10 @@
 // Framework
 
 Game = {
+	global: window,
+	
 	spawnEntity: function(type) {
-		return new window[type]().spawn();
+		return new this.global[type]().spawn();
 	}
 }
 
@@ -26,7 +28,7 @@ function Entity() {
 
 }
 
-// Game objects
+// Game objects (entities)
 
 function Human() {
 
@@ -69,16 +71,16 @@ function main() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	update();
 	render();
-};
+}
 
 function update() {
-	for (x in gameObjects) {
+	for (x in entities) {
 		entities[x].update();
 	}
-};
+}
 
 function render() {
-	for (x in gameObjects) {
+	for (x in entities) {
 		entities[x].draw();
 	}
 }
