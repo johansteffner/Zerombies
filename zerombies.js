@@ -1,8 +1,14 @@
 // Framework
 
-var gameObjects = new Array();
+Game = {
+	spawnEntity: function(type) {
+		return new window[type]().spawn();
+	}
+}
 
-function GameObject() {
+var entities = new Array();
+
+function Entity() {
 
 	this.x = 0;
 	this.y = 0;
@@ -11,7 +17,7 @@ function GameObject() {
 	this.yDirection = 1;
 	
 	this.spawn = function() {
-		gameObjects.push(this);
+		entities.push(this);
     }
 	
 	this.kill = function() {
@@ -41,7 +47,7 @@ function Human() {
 	
 }
 
-Human.prototype = new GameObject;
+Human.prototype = new Entity;
 
 // Main game loop
 
@@ -53,7 +59,7 @@ function init() {
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 	
-	this.human = new Human().spawn();
+	Game.spawnEntity('Human');
 
 	setInterval(main, 100);
 
@@ -67,13 +73,13 @@ function main() {
 
 function update() {
 	for (x in gameObjects) {
-		gameObjects[x].update();
+		entities[x].update();
 	}
 };
 
 function render() {
 	for (x in gameObjects) {
-		gameObjects[x].draw();
+		entities[x].draw();
 	}
 }
 
