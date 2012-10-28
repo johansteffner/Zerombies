@@ -8,11 +8,17 @@ Game = {
 		return new this.global[type]().spawn(x, y);
 	},
 	
+	removeEntity: function(entity) {
+		for (var i = 0; i < this.entities.length; i++) {
+			if (this.entities[i] == entity) this.entities.splice(i,1);
+		}
+	},
+	
  	checkCollisions: function() {
 		for (i in this.entities) {
 			for (j in this.entities) {
 				if (this.entities[i] != this.entities[j] && (this.entities[i].x >= this.entities[j].x - this.entities[i].size && this.entities[i].x <= this.entities[j].x + this.entities[j].size) && (this.entities[i].y >= this.entities[j].y - this.entities[i].size && this.entities[i].y <= this.entities[j].y + this.entities[j].size)) {
-					console.log('collision!');
+					this.entities[i].collide(this.entities[j]);
 				}
 			}
 		}
@@ -34,13 +40,19 @@ function Entity() {
     }
 	
 	this.kill = function() {
-		// remove
+		Game.removeEntity(this);
+	}
+	
+	this.collide = function(entity) {
+		// default is no action
 	}
 }
 
 // Game objects (entities)
 
 function Human() {
+
+	this.name = "Human";
 
 	this.color = "#000";
 	
@@ -66,6 +78,8 @@ Human.prototype = new Entity;
 
 function Zombie() {
 
+	this.name = "Zombie";
+
 	this.color = "#ff0000";
 	
 	this.speed = 10;
@@ -84,6 +98,12 @@ function Zombie() {
 	this.draw = function() {
 		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x, this.y, this.size, this.size);
+	}
+	
+	this.collide = function(entity) {
+		if (entity.name == "Human") {
+			entity.kill();
+		}
 	}
 	
 }
