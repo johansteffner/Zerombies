@@ -7,6 +7,16 @@ Game = {
 	spawnEntity: function(type, x, y) {
 		return new this.global[type]().spawn(x, y);
 	}
+	
+ 	checkCollisions: function() {
+		for (i in this.entities) {
+			for (j in this.entities) {
+				if ((this.entities[i].x >= this.entities[j].x - this.entities[i].size && this.entities[i].x <= this.entities[j].x + this.entities[j].size) && (this.entities[i].y >= this.entities[j].y - this.entities[i].size && this.entities[i].y <= this.entities[j].y + this.entities[j].size)) {
+					// collision!
+				}
+			}
+		}
+	}
 }
 
 function Entity() {
@@ -26,7 +36,6 @@ function Entity() {
 	this.kill = function() {
 		// remove
 	}
-
 }
 
 // Game objects (entities)
@@ -39,13 +48,15 @@ function Human() {
 	
 	this.hp = 100;
 	
+	this.size = 10;
+	
 	this.update = function() {
 		this.x += this.speed * this.xDirection;
 		this.y += this.speed * this.xDirection;
 	}
 	
 	this.draw = function() {
-		ctx.fillRect(this.x, this.y, 10, 10);
+		ctx.fillRect(this.x, this.y, this.size, this.size);
 	}
 	
 }
@@ -76,6 +87,7 @@ function main() {
 }
 
 function update() {
+	Game.checkCollisions();
 	for (x in Game.entities) {
 		Game.entities[x].update();
 	}
