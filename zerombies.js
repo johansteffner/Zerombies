@@ -5,12 +5,14 @@ Game = {
 	entities: new Array(),
 	
 	spawnEntity: function(type, x, y) {
-		return new this.global[type]().spawn(x, y);
+		var entity = new type(x, y);
+		this.entities.push(entity);
+		return entity;
 	},
 	
 	removeEntity: function(entity) {
 		for (var i = 0; i < this.entities.length; i++) {
-			if (this.entities[i] == entity) this.entities.splice(i,1);
+			if (this.entities[i] == entity) this.entities.splice(i, 1);
 		}
 	},
 	
@@ -25,19 +27,13 @@ Game = {
 	}
 }
 
-function Entity() {
+function Entity(x, y) {
 
-	this.x = 0;
-	this.y = 0;
+	this.x = x;
+	this.y = y;
 
 	this.xDirection = 1;
 	this.yDirection = 1;
-	
-	this.spawn = function(x, y) {
-		this.x = x;
-		this.y = y;
-		Game.entities.push(this);
-    }
 	
 	this.kill = function() {
 		Game.removeEntity(this);
@@ -51,15 +47,12 @@ function Entity() {
 // Game objects (entities)
 
 function Human() {
-
-	this.name = "Human";
+	
+	Entity.apply(this, arguments); // pass constructor arguments to parent
 
 	this.color = "#000";
-	
 	this.speed = 0;
-	
 	this.hp = 100;
-	
 	this.size = 10;
 	
 	this.update = function() {
@@ -78,16 +71,12 @@ Human.prototype = new Entity;
 
 function Zombie() {
 
-	this.name = "Zombie";
+	Entity.apply(this, arguments); // pass constructor arguments to parent
 
 	this.color = "#ff0000";
-	
 	this.speed = 10;
-	
 	this.xDirection = 0;
-	
 	this.hp = 100;
-	
 	this.size = 10;
 	
 	this.update = function() {
@@ -101,7 +90,7 @@ function Zombie() {
 	}
 	
 	this.collide = function(entity) {
-		if (entity.name == "Human") {
+		if (entity instanceof Human) {
 			entity.kill();
 		}
 	}
@@ -120,9 +109,8 @@ function init() {
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 	
-	// Game.spawnEntity('Human', 20, 40);
-	Game.spawnEntity('Human', 400, 100);
-	Game.spawnEntity('Zombie', 400, 20);
+	Game.spawnEntity(Human, 400, 100);
+	Game.spawnEntity(Zombie, 400, 20);
 
 	setInterval(main, 100);
 
