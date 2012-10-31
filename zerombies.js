@@ -17,10 +17,11 @@ Game = {
 	},
 	
  	checkCollisions: function() {
-		for (i in this.entities) {
-			for (j in this.entities) {
-				if (this.entities[i] != this.entities[j] && (this.entities[i].x >= this.entities[j].x - this.entities[i].size && this.entities[i].x <= this.entities[j].x + this.entities[j].size) && (this.entities[i].y >= this.entities[j].y - this.entities[i].size && this.entities[i].y <= this.entities[j].y + this.entities[j].size)) {
+		for (i=0; i<this.entities.length; i++) {
+			for (j=i+1; j<this.entities.length; j++) {
+				if ((this.entities[i].x >= this.entities[j].x - this.entities[i].size && this.entities[i].x <= this.entities[j].x + this.entities[j].size) && (this.entities[i].y >= this.entities[j].y - this.entities[i].size && this.entities[i].y <= this.entities[j].y + this.entities[j].size)) {
 					this.entities[i].collide(this.entities[j]);
+					this.entities[j].collide(this.entities[i]);
 				}
 			}
 		}
